@@ -29,3 +29,6 @@ pip install -q git+https://github.com/huggingface/transformers.git@main git+http
 pip install pyaudio
 
 ffmpeg 설치 및 환경변수 설정
+
+<h3>실행 방법</h3>
+streamlit run app.py
