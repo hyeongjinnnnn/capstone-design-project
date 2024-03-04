@@ -13,8 +13,6 @@ from transformers import (
     WhisperForConditionalGeneration,
     WhisperTokenizer,
     WhisperProcessor,
-)
-from transformers import (
     AutoModelForSpeechSeq2Seq,
     AutoProcessor,
     pipeline
