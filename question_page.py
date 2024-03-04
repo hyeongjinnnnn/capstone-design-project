@@ -16,7 +16,7 @@ from transformers import (
 from audio_recorder_streamlit import audio_recorder
 
 def question_page(st, i):
-    st.markdown("<h1 style='text-align: center; font-size: 1.5em;'>Question 1</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='text-align: center; font-size: 1.5em;'>Question {i}</h1>", unsafe_allow_html=True)
     st.markdown("<hr></hr>", unsafe_allow_html=True)
 
         # 이미지 추가
