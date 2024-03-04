@@ -1,5 +1,6 @@
 import tempfile
 import os
+import threading
 import speech_recognition as sr
 from gtts import gTTS
 import torch
@@ -8,13 +9,10 @@ from transformers import (
     WhisperForConditionalGeneration,
     WhisperTokenizer,
     WhisperProcessor,
-)
-from transformers import (
     AutoModelForSpeechSeq2Seq,
-    AutoProcessor,
     pipeline
 )
-from peft import PeftModel, PeftConfig
+
 from audio_recorder_streamlit import audio_recorder
 
 def question_page(st, i):
@@ -38,10 +36,31 @@ def question_page(st, i):
         return audio_data
     
     def save_audio_file(audio_data, directory="records"):
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
         filename = os.path.join(directory, f"record{i}.wav")
         with open(filename, "wb") as f:
             f.write(audio_data.get_wav_data())
         return filename    
+    
+    def save_transcription_to_file(transcript, filename):
+        with open(filename, "w", encoding="utf-8") as file:
+            file.write(transcript)
+
+    def transcribe_audio_in_background(audio_filename):
+        # Function to be run in a separate thread for transcribing audio
+        result = st.session_state.whisper_pipe(audio_filename, generate_kwargs={"language": "english"})
+        # Safely append the transcription result to the transcript_text list in the session state
+        transcript = result["text"]
+        st.session_state.transcript_text.append(transcript)
+        transcript_filename = audio_filename.replace(".wav", "_transcript.txt")
+        save_transcription_to_file(transcript, transcript_filename)
+
+    def start_transcription_thread(audio_filename):
+        # Starting the transcription in a separate thread
+        thread = threading.Thread(target=transcribe_audio_in_background, args=(audio_filename,))
+        thread.start()
 
     def text_to_speech(text, lang='en'):
         # 임시 파일 생성
@@ -73,10 +92,11 @@ def question_page(st, i):
             st.success("녹음 완료!")
 
         audio_filename = save_audio_file(audio_data)
+        start_transcription_thread(audio_filename)
         # whisper 허깅페이스
-        result = st.session_state.whisper_pipe(audio_filename, generate_kwargs={"language": "english"})
-        st.session_state.transcript_text.append(result["text"])
-        st.write("인식된 텍스트:", st.session_state.transcript_text[i - 1]) 
+        # result = st.session_state.whisper_pipe(audio_filename, generate_kwargs={"language": "english"})
+        # st.session_state.transcript_text.append(result["text"])
+        # st.write("인식된 텍스트:", st.session_state.transcript_text[i - 1]) 
 
     # 가운데 정렬하기 위한 HTML/CSS
     centered_style = """
