@@ -1,30 +1,18 @@
 pip install streamlit
 
-pip install mysql-connector
-
-pip install audio_recorder_streamlit
+pip install mysql-connector-python
 
 pip install SpeechRecognition
 
-pip install gtts
+pip install gTTS
 
-pip install torch torchvision torchaudio
-
-pip install datasets>=2.6.1
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 pip install git+https://github.com/huggingface/transformers
 
-pip install librosa
+pip install -q bitsandbytes accelerate
 
-pip install evaluate>=0.30
-
-pip install jiwer
-
-pip install gradio
-
-pip install -q bitsandbytes datasets accelerate loralib
-
-pip install -q git+https://github.com/huggingface/transformers.git@main git+https://github.com/huggingface/peft.git@main
+pip install -q git+https://github.com/huggingface/transformers.git@main
 
 pip install pyaudio
 
