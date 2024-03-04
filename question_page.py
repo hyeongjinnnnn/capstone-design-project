@@ -28,9 +28,11 @@ def question_page(st, i):
     
     def record_audio():
         r = sr.Recognizer()
+        r.pause_threshold = 10.0
         mic = sr.Microphone()
 
         with mic as source:
+            r.adjust_for_ambient_noise(source)
             audio_data = r.listen(source)
 
         return audio_data
