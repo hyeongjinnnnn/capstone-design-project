@@ -13,6 +13,7 @@ from transformers import (
     pipeline
 )
 
+# from peft import PeftModel, PeftConfig
 from audio_recorder_streamlit import audio_recorder
 
 def question_page(st, i):
@@ -35,7 +36,7 @@ def question_page(st, i):
 
         return audio_data
     
-    def save_audio_file(audio_data, directory="records"):
+    def save_audio_file(audio_data, directory = "records"):
         if not os.path.exists(directory):
             os.makedirs(directory)
 
@@ -44,22 +45,31 @@ def question_page(st, i):
             f.write(audio_data.get_wav_data())
         return filename    
     
-    def save_transcription_to_file(transcript, filename):
-        with open(filename, "w", encoding="utf-8") as file:
+    def save_transcription_to_file(transcript, audio_filename, save_directory):
+        if not os.path.exists(save_directory):
+            os.makedirs(save_directory)
+        
+        base_filename = os.path.basename(audio_filename)
+        base_filename_without_ext = os.path.splitext(base_filename)[0]
+        
+        transcript_filename = f"{base_filename_without_ext}_transcript.txt"
+        transcript_filepath = os.path.join(save_directory, transcript_filename)
+        
+        with open(transcript_filepath, "w", encoding="utf-8") as file:
             file.write(transcript)
+        print(f"Transcript saved to {transcript_filepath}")
 
-    def transcribe_audio_in_background(audio_filename):
+    def transcribe_audio_in_background(audio_filename, whisper_pipe):
         # Function to be run in a separate thread for transcribing audio
-        result = st.session_state.whisper_pipe(audio_filename, generate_kwargs={"language": "english"})
-        # Safely append the transcription result to the transcript_text list in the session state
+        # result = st.session_state.whisper_pipe(audio_filename, generate_kwargs={"language": "english"})
+        result = whisper_pipe(audio_filename, generate_kwargs={"language": "english"})
         transcript = result["text"]
+        save_transcription_to_file(transcript, audio_filename, save_directory='D:/capstone_project/opic/transcription')
         st.session_state.transcript_text.append(transcript)
-        transcript_filename = audio_filename.replace(".wav", "_transcript.txt")
-        save_transcription_to_file(transcript, transcript_filename)
+        # transcript_filename = audio_filename.replace(".wav", "_transcript.txt")
 
-    def start_transcription_thread(audio_filename):
-        # Starting the transcription in a separate thread
-        thread = threading.Thread(target=transcribe_audio_in_background, args=(audio_filename,))
+    def start_transcription_thread(audio_filename, whisper_pipe):
+        thread = threading.Thread(target=transcribe_audio_in_background, args=(audio_filename, whisper_pipe))
         thread.start()
 
     def text_to_speech(text, lang='en'):
@@ -92,7 +102,8 @@ def question_page(st, i):
             st.success("녹음 완료!")
 
         audio_filename = save_audio_file(audio_data)
-        start_transcription_thread(audio_filename)
+        whisper_pipe = st.session_state.whisper_pipe
+        start_transcription_thread(audio_filename, whisper_pipe)
         # whisper 허깅페이스
         # result = st.session_state.whisper_pipe(audio_filename, generate_kwargs={"language": "english"})
         # st.session_state.transcript_text.append(result["text"])
@@ -114,4 +125,3 @@ def question_page(st, i):
     if st.button("Next >", type="primary", ):
         st.session_state.question_page_number += 1
         return 'question_page'
-    
