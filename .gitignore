@@ -1,2 +1,8 @@
 __pycache__/
 .pyc
+
+# records
+records/*.wav
+
+# transcription
+transcription/*.txt
