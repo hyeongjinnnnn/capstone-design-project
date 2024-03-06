@@ -1,6 +1,7 @@
 import tempfile
 import os
 import threading
+import time
 import speech_recognition as sr
 from gtts import gTTS
 import torch
@@ -12,22 +13,37 @@ from transformers import (
     AutoModelForSpeechSeq2Seq,
     pipeline
 )
+from streamlit_TTS import auto_play, text_to_audio
 
-# from peft import PeftModel, PeftConfig
-from audio_recorder_streamlit import audio_recorder
+import base64
 
 def question_page(st, i):
+    if f'question{i}_clicks' not in st.session_state:
+        st.session_state[f'question{i}_clicks'] = 2
+
+    # 가운데 정렬하기 위한 HTML/CSS
+    centered_style = """
+        <style>
+            div.stButton > button {
+                display: block;
+                margin: 0 auto;
+            }
+        </style>
+    """
+
+    # Streamlit 앱에 적용
+    st.markdown(centered_style, unsafe_allow_html=True)
     st.markdown(f"<h1 style='text-align: center; font-size: 1.5em;'>Question {i}</h1>", unsafe_allow_html=True)
     st.markdown("<hr></hr>", unsafe_allow_html=True)
 
-        # 이미지 추가
+    # 이미지 추가
     image_url = "https://raw.githubusercontent.com/ttkdenddl11/Algorithm/main/index_woman.png"  # GitHub Raw URL 사용
 
     st.markdown(f'<div style="text-align: center;"><img src="{image_url}" style="width:33%;"></div>', unsafe_allow_html=True)
     
     def record_audio():
         r = sr.Recognizer()
-        r.pause_threshold = 10.0
+        r.pause_threshold = 5.0
         mic = sr.Microphone()
 
         with mic as source:
@@ -36,11 +52,11 @@ def question_page(st, i):
 
         return audio_data
     
-    def save_audio_file(audio_data, directory = "records"):
-        if not os.path.exists(directory):
-            os.makedirs(directory)
+    def save_audio_file(audio_data, save_directory = "records"):
+        if not os.path.exists(save_directory):
+            os.makedirs(save_directory)
 
-        filename = os.path.join(directory, f"record{i}.wav")
+        filename = os.path.join(save_directory, f"record{i}.wav")
         with open(filename, "wb") as f:
             f.write(audio_data.get_wav_data())
         return filename    
@@ -64,64 +80,67 @@ def question_page(st, i):
         # result = st.session_state.whisper_pipe(audio_filename, generate_kwargs={"language": "english"})
         result = whisper_pipe(audio_filename, generate_kwargs={"language": "english"})
         transcript = result["text"]
-        save_transcription_to_file(transcript, audio_filename, save_directory='D:/capstone_project/opic/transcription')
-        st.session_state.transcript_text.append(transcript)
+        save_transcription_to_file(transcript, audio_filename, save_directory='transcription')
+        # st.session_state.transcript_text.append(transcript)
         # transcript_filename = audio_filename.replace(".wav", "_transcript.txt")
 
     def start_transcription_thread(audio_filename, whisper_pipe):
         thread = threading.Thread(target=transcribe_audio_in_background, args=(audio_filename, whisper_pipe))
         thread.start()
 
-    def text_to_speech(text, lang='en'):
-        # 임시 파일 생성
-        with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_file:
-            temp_filename = temp_file.name
+    def autoplay_audio(file_path: str):
+        with open(file_path, "rb") as f:
+            data = f.read()
+            b64 = base64.b64encode(data).decode()
+            md = f"""
+                <audio controls autoplay="true" style="display: none;">
+                <source src="data:audio/wav;base64,{b64}" type="audio/wav">
+                </audio>
+                """
+        st.markdown(md, unsafe_allow_html=True,)
 
-        tts = gTTS(text=text, lang=lang, slow=False)
-        tts.save(temp_filename)
-        return temp_filename
+    def text_to_speech(text, lang='en'):
+        # audio_filename = f"question_audio{i}.wav"
+        # 파일 생성
+        # tts = gTTS(text=text, lang=lang, slow=False)
+        audio = text_to_audio(text, language='en')
+        auto_play(audio, key=st.session_state[f'question{i}_clicks'])
+        # tts.save(audio_filename)
+        # # 오디오 출력
+        # autoplay_audio(audio_filename)
+        # # 파일 삭제
+        # os.remove(audio_filename)
+    
 
     # TTS 버튼
     if st.button(f"question {i}"):
         question = st.session_state.question_list[i - 1]
-        output_file = text_to_speech(question, lang="en")
-        st.audio(output_file, format='audio/wav')
+        if st.session_state[f'question{i}_clicks'] != 0:
+            st.session_state[f'question{i}_clicks'] -= 1
+            #audio = text_to_audio(question, language='en')
+            #auto_play(audio)
+            text_to_speech(question)
+        else:
+            st.error(f"You have already played Question {i}.")
 
-    
-    # audio_bytes = audio_recorder(
-    #     energy_threshold=(-1.0, 1.0),
-    #     pause_threshold=60.0,
-    # )
-
-    # if audio_bytes:
-    #     st.audio(audio_bytes, format="audio/wav")
-        
     if st.button("녹음 시작"):
-        with st.spinner("녹음 중..."):
+        with st.spinner("녹음 중... 5초 동안 말하지 않으면 종료됩니다."):
             audio_data = record_audio()
             st.success("녹음 완료!")
 
         audio_filename = save_audio_file(audio_data)
         whisper_pipe = st.session_state.whisper_pipe
         start_transcription_thread(audio_filename, whisper_pipe)
+        st.session_state.question_next_btn = True
         # whisper 허깅페이스
         # result = st.session_state.whisper_pipe(audio_filename, generate_kwargs={"language": "english"})
         # st.session_state.transcript_text.append(result["text"])
         # st.write("인식된 텍스트:", st.session_state.transcript_text[i - 1]) 
 
-    # 가운데 정렬하기 위한 HTML/CSS
-    centered_style = """
-        <style>
-            div.stButton > button {
-                display: block;
-                margin: 0 auto;
-            }
-        </style>
-    """
+    if st.session_state.question_next_btn:
+        if st.button("Next >", type="primary", ):
+            st.session_state.question_page_number += 1
+            st.session_state.question_next_btn = False
 
-    # Streamlit 앱에 적용
-    st.markdown(centered_style, unsafe_allow_html=True)
-
-    if st.button("Next >", type="primary", ):
-        st.session_state.question_page_number += 1
-        return 'question_page'
+            return 'question_page'
+        

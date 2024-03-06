@@ -7,6 +7,7 @@ from page3 import page3
 from page4 import page4
 from page5 import page5
 from question_page import question_page
+
 import torch
 from transformers import (
     AutomaticSpeechRecognitionPipeline,
@@ -61,9 +62,12 @@ if 'selected_options' not in st.session_state:
 
 if "question_list" not in st.session_state:
     st.session_state.question_list = []
+
+if "question_next_btn" not in st.session_state:
+    st.session_state.question_next_btn = False
     
-if "transcript_text" not in st.session_state:
-    st.session_state.transcript_text = []
+# if "transcript_text" not in st.session_state:
+#     st.session_state.transcript_text = []
 
 if "question_page_number" not in st.session_state:
     st.session_state.question_page_number = 0
