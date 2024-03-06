@@ -28,6 +28,12 @@ pip install -q git+https://github.com/huggingface/transformers.git@main git+http
 
 pip install pyaudio
 
+pip install streamlit_TTS
+
+pip install python-dotenv
+
+pip install openai
+
 ffmpeg 설치 및 환경변수 설정
 
 <h3>실행 방법</h3>
