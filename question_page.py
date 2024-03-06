@@ -132,6 +132,7 @@ def question_page(st, i):
         whisper_pipe = st.session_state.whisper_pipe
         start_transcription_thread(audio_filename, whisper_pipe)
         st.session_state.question_next_btn = True
+
         # whisper 허깅페이스
         # result = st.session_state.whisper_pipe(audio_filename, generate_kwargs={"language": "english"})
         # st.session_state.transcript_text.append(result["text"])
@@ -141,6 +142,9 @@ def question_page(st, i):
         if st.button("Next >", type="primary", ):
             st.session_state.question_page_number += 1
             st.session_state.question_next_btn = False
-
+            
+            if st.session_state.question_page_number == 16:
+                return 'show_score_page'
+            
             return 'question_page'
         

@@ -7,6 +7,7 @@ from page3 import page3
 from page4 import page4
 from page5 import page5
 from question_page import question_page
+from show_score_page import show_score_page
 
 import torch
 from transformers import (
@@ -88,6 +89,8 @@ elif st.session_state.current_page == 'page5':
     next_page = page5(st)
 elif st.session_state.current_page == 'question_page':
     next_page = question_page(st, st.session_state.question_page_number)
+elif st.session_state.current_page == 'show_score_page':
+    next_page = show_score_page(st)
 
 # next_page에 따라서 current_page 업데이트
 if next_page:
