@@ -44,10 +44,11 @@ def question_page(st, i):
     def record_audio():
         r = sr.Recognizer()
         r.pause_threshold = 5.0
-        mic = sr.Microphone()
+        # r.dynamic_energy_threshold = True
+        r.energy_threshold = 400
 
-        with mic as source:
-            r.adjust_for_ambient_noise(source)
+        with sr.Microphone() as source:
+            r.adjust_for_ambient_noise(source, duration=2)
             audio_data = r.listen(source)
 
         return audio_data
@@ -75,14 +76,14 @@ def question_page(st, i):
             file.write(transcript)
         print(f"Transcript saved to {transcript_filepath}")
 
+
     def transcribe_audio_in_background(audio_filename, whisper_pipe):
         # Function to be run in a separate thread for transcribing audio
         # result = st.session_state.whisper_pipe(audio_filename, generate_kwargs={"language": "english"})
         result = whisper_pipe(audio_filename, generate_kwargs={"language": "english"})
         transcript = result["text"]
         save_transcription_to_file(transcript, audio_filename, save_directory='transcription')
-        # st.session_state.transcript_text.append(transcript)
-        # transcript_filename = audio_filename.replace(".wav", "_transcript.txt")
+
 
     def start_transcription_thread(audio_filename, whisper_pipe):
         thread = threading.Thread(target=transcribe_audio_in_background, args=(audio_filename, whisper_pipe))
