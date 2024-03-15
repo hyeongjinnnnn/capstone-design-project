@@ -6,3 +6,6 @@ records/*.wav
 
 # transcription
 transcription/*.txt
+
+# model
+model

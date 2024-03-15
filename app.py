@@ -64,6 +64,9 @@ if 'selected_options' not in st.session_state:
 if "question_list" not in st.session_state:
     st.session_state.question_list = []
 
+if "thread_complete" not in st.session_state:
+    st.session_state.thread_complete = False
+
 if "question_next_btn" not in st.session_state:
     st.session_state.question_next_btn = False
     

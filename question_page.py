@@ -16,6 +16,7 @@ from transformers import (
 from streamlit_TTS import auto_play, text_to_audio
 
 import base64
+from audiorecorder import audiorecorder
 
 def question_page(st, i):
     if f'question{i}_clicks' not in st.session_state:
@@ -45,7 +46,7 @@ def question_page(st, i):
         r = sr.Recognizer()
         r.pause_threshold = 5.0
         # r.dynamic_energy_threshold = True
-        r.energy_threshold = 400
+        r.energy_threshold = 3500
 
         with sr.Microphone() as source:
             r.adjust_for_ambient_noise(source, duration=2)
