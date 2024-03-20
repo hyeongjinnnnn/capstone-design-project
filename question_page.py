@@ -16,7 +16,6 @@ from transformers import (
 from streamlit_TTS import auto_play, text_to_audio
 
 import base64
-from audiorecorder import audiorecorder
 
 def question_page(st, i):
     if f'question{i}_clicks' not in st.session_state:
