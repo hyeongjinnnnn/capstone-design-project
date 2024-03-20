@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Survey</title>
+</head>
+<body>
+    <div class="content">
+        <div class="steps-container">
+            <ul class="steps-5">
+                <li class="selected">
+                    <div class="step-content">
+                        <h3>Step 1</h3>
+                        <p>Background Survey</p>
+                    </div>
+                </li>
+                <li class>
+                    <div class="step-content">
+                        <h3>Step 2</h3>
+                        <p>Self Assessment</p>
+                    </div>
+                </li>
+                <li class>
+                    <div class="step-content">
+                        <h3>Step 3</h3>
+                        <p>Setup</p>
+                    </div>
+                </li>
+                <li class>
+                    <div class="step-content">
+                        <h3>Step 4</h3>
+                        <p>Sample Question</p>
+                    </div>
+                </li>
+                <li class>
+                    <div class="step-content">
+                        <h3>Step 5</h3>
+                        <p>Begin Test</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="survey-container">
+            <h2 class="title">Background Survey</h2>
+            <p class="survey-instructions">
+                질문을 읽고 정확히 답변해 주시기 바랍니다. 설문에 대한 응답을 기초로 개인별 문항이 출제됩니다.
+            </p>
+            <h2 id="survey-progress">Part 1 of 4</h2>
+            <ul id="survey-questions" class="list-plain">
+                <li class="survey-question step-1" style="display: list-item;">
+                    <p class="background-survey-question">현재 귀하는 어느 분야에 종사하고 계십니까?</p>
+                    <div class="form-check">
+                        <input name="survey-option-1" type="radio" class="form-check-input">
+                        <span>사업자/직장인</span>
+                    </div>
+                    <div class="form-check">
+                        <input name="survey-option-1" type="radio" class="form-check-input">
+                        <span>학생</span>
+                    </div>
+                    <div class="form-check">
+                        <input name="survey-option-1" type="radio" class="form-check-input">
+                        <span>취업준비생</span>
+                    </div>
+                </li>
+                <li class="survey-question step-2" style="display: none;" hidden="hidden">
+                    <p class="background-survey-question">현재 귀하는 어디에 살고 계십니까?</p>
+                    <div class="form-check">
+                        <input name="survey-option-2" type="radio" class="form-check-input">
+                        <span>개인주택이나 아파트에 홀로 거주</span>
+                    </div>
+                    <div class="form-check">
+                        <input name="survey-option-2" type="radio" class="form-check-input">
+                        <span>친구나 룸메이트와 함께 주택이나 아파트에 거주</span>
+                    </div>
+                    <div class="form-check">
+                        <input name="survey-option-2" type="radio" class="form-check-input">
+                        <span>가족(배우자/자녀/기타 가족 일원)과 함께 주택이나 아파트에 거주</span>
+                    </div>
+                    <div class="form-check">
+                        <input name="survey-option-2" type="radio" class="form-check-input">
+                        <span>학교 기숙사</span>
+                    </div>
+                    <div class="form-check">
+                        <input name="survey-option-2" type="radio" class="form-check-input">
+                        <span>군대 막사</span>
+                    </div>
+                </li>
+                <li class="survey-question step-3" style="display: none;" hidden="hidden">
+                    <p class="background-survey-question">귀하는 여가 활동으로 주로 무엇을 하십니까? (두 개 이상 선택)</p>
+                    <div class="form-check">
+                        <input name="survey-option-3" type="checkbox" class="form-check-input">
+                        <span>운동</span>
+                    </div>
+                    <div class="form-check">
+                        <input name="survey-option-3" type="checkbox" class="form-check-input">
+                        <span>게임</span>
+                    </div>
+                    <div class="form-check">
+                        <input name="survey-option-3" type="checkbox" class="form-check-input">
+                        <span>SNS</span>
+                    </div>
+                    <div class="form-check">
+                        <input name="survey-option-3" type="checkbox" class="form-check-input">
+                        <span>문화생활</span>
+                    </div>
+                    <div class="form-check">
+                        <input name="survey-option-3" type="checkbox" class="form-check-input">
+                        <span>여행</span>
+                    </div>
+                    <div class="form-check">
+                        <input name="survey-option-3" type="checkbox" class="form-check-input">
+                        <span>자기관리</span>
+                    </div>
+                    <div class="form-check">
+                        <input name="survey-option-3" type="checkbox" class="form-check-input">
+                        <span>예술활동</span>
+                    </div>
+                    <div class="form-check">
+                        <input name="survey-option-3" type="checkbox" class="form-check-input">
+                        <span>자기계발</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="button-container">
+            <div class="text-left">
+                <button id="button-back" class="btn" type="button" name="button" disabled>
+                    <span>Back</span>
+                </button>
+            </div>
+            <div class="text-right">
+                <form id="form-next" action="" method="post">
+                    <button id="button-next" class="btn" type="button" name="button">
+                        <span>Next</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

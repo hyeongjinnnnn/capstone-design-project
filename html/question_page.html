@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opic Test</title>
+</head>
+<body>
+    <div id="content">
+        <div class="test-container">
+            <h2 id="question-title">Question 1 of 2</h2>
+            <!-- 모달 들어가는 곳 -->
+            <div id="test-area" style="display: flex;">
+                <div class="text-center">
+                    <div class="ava-container">
+                        <img src="https://raw.githubusercontent.com/ttkdenddl11/Algorithm/main/index_woman.png" alt="Ava" class="ava">
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="play-control-container">
+                        <button id="replay-button" class="btn" type="button" name="button" style="display: none;" hidden="hidden"></button>
+                        <button id="play-button" class="btn" type="button" name="button" style="display: block;">
+                            <!-- 임시 - 재생 표시 들어갈 예정 -->
+                            <span>Play</span>
+                        </button>
+                        <!-- 재생 바 -->
+                        <div class="play-gauge-container">
+                            <div id="play-gauge" class="track-well">
+                                <div class="track" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="play-control-container">
+                        <!-- 재생/녹음 상태 배너 -->
+                        <span class="alert-recording prompt-status-1" style="display: block;">
+                            Click 'PLAY' button to listen
+                        </span>
+                        <span class="alert-recording prompt-status-2" style="display: none;" hidden="hidden">
+                            Playing
+                        </span>
+                        <span class="alert-recording prompt-status-3" style="display: none;" hidden="hidden">
+                            Recording
+                        </span>
+                        <span class="alert-recording prompt-status-4" style="display: none;" hidden="hidden">
+                            Time for a new question
+                        </span>
+                    </div>
+                    <div class="">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="button-container text-right">
+            <form id="form-next" action="" method="post">
+                <button id="button-next" class="btn" type="button" name="button">
+                    <span>Next</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
